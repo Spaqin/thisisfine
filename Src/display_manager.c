@@ -30,6 +30,7 @@ void disp_mgr_timer_handler(void)
 	if(_disp_mgr.title_or_data == TITLE)
 	{
 		_disp_mgr.title_or_data = DATA;
+		BSP_LCD_GLASS_Clear();
 		if(disp_data.dot_info & TITLE_DOT)
 			BSP_LCD_GLASS_DisplayStrDeci(disp_data.title.dot);
 		else
@@ -45,6 +46,7 @@ void disp_mgr_timer_handler(void)
 	{
 		_disp_mgr.title_or_data = TITLE;
 		_disp_mgr.disp_mgr_data_ptr = ptr == _disp_mgr.size - 1 ? 0 : ptr + 1;
+		BSP_LCD_GLASS_Clear();
 		if(disp_data.dot_info & DATA_DOT)
 			BSP_LCD_GLASS_DisplayStrDeci(disp_data.data.dot);
 		else

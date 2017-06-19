@@ -4,6 +4,7 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../Src/dht11.c \
 ../Src/display_manager.c \
 ../Src/main.c \
 ../Src/pmsensor.c \
@@ -12,6 +13,7 @@ C_SRCS += \
 ../Src/system_stm32l4xx.c 
 
 OBJS += \
+./Src/dht11.o \
 ./Src/display_manager.o \
 ./Src/main.o \
 ./Src/pmsensor.o \
@@ -20,6 +22,7 @@ OBJS += \
 ./Src/system_stm32l4xx.o 
 
 C_DEPS += \
+./Src/dht11.d \
 ./Src/display_manager.d \
 ./Src/main.d \
 ./Src/pmsensor.d \

@@ -42,10 +42,11 @@
 /* Private variables ---------------------------------------------------------*/
 LPTIM_HandleTypeDef hlptim1;
 
+TIM_HandleTypeDef htim2;
+DMA_HandleTypeDef hdma_tim2_ch3;
+
 UART_HandleTypeDef huart4;
-UART_HandleTypeDef huart2;
 DMA_HandleTypeDef hdma_uart4_rx;
-DMA_HandleTypeDef hdma_usart2_rx;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
@@ -57,8 +58,8 @@ void Error_Handler(void);
 static void MX_GPIO_Init(void);
 static void MX_DMA_Init(void);
 static void MX_UART4_Init(void);
-static void MX_USART2_UART_Init(void);
 static void MX_LPTIM1_Init(void);
+static void MX_TIM2_Init(void);
 static void MX_NVIC_Init(void);
 
 /* USER CODE BEGIN PFP */
@@ -89,14 +90,15 @@ int main(void)
   MX_GPIO_Init();
   MX_DMA_Init();
   MX_UART4_Init();
-  MX_USART2_UART_Init();
   MX_LPTIM1_Init();
+  MX_TIM2_Init();
 
   /* Initialize interrupts */
   MX_NVIC_Init();
 
   /* USER CODE BEGIN 2 */
   init_pm_data(&huart4);
+  dht11_init();
   disp_mgr_init(&hlptim1);
 
   /* USER CODE END 2 */
@@ -152,9 +154,7 @@ void SystemClock_Config(void)
     Error_Handler();
   }
 
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART2|RCC_PERIPHCLK_UART4
-                              |RCC_PERIPHCLK_LPTIM1;
-  PeriphClkInit.Usart2ClockSelection = RCC_USART2CLKSOURCE_PCLK1;
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_UART4|RCC_PERIPHCLK_LPTIM1;
   PeriphClkInit.Uart4ClockSelection = RCC_UART4CLKSOURCE_PCLK1;
   PeriphClkInit.Lptim1ClockSelection = RCC_LPTIM1CLKSOURCE_LSI;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
@@ -185,9 +185,6 @@ void SystemClock_Config(void)
 */
 static void MX_NVIC_Init(void)
 {
-  /* USART2_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(USART2_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(USART2_IRQn);
   /* UART4_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(UART4_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(UART4_IRQn);
@@ -207,6 +204,53 @@ static void MX_LPTIM1_Init(void)
   hlptim1.Init.Input1Source = LPTIM_INPUT1SOURCE_GPIO;
   hlptim1.Init.Input2Source = LPTIM_INPUT2SOURCE_GPIO;
   if (HAL_LPTIM_Init(&hlptim1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+}
+
+/* TIM2 init function */
+static void MX_TIM2_Init(void)
+{
+
+  TIM_ClockConfigTypeDef sClockSourceConfig;
+  TIM_MasterConfigTypeDef sMasterConfig;
+  TIM_IC_InitTypeDef sConfigIC;
+
+  htim2.Instance = TIM2;
+  htim2.Init.Prescaler = 80;
+  htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim2.Init.Period = 0;
+  htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim2, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  if (HAL_TIM_IC_Init(&htim2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_ENABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_RISING;
+  sConfigIC.ICSelection = TIM_ICSELECTION_DIRECTTI;
+  sConfigIC.ICPrescaler = TIM_ICPSC_DIV1;
+  sConfigIC.ICFilter = 0;
+  if (HAL_TIM_IC_ConfigChannel(&htim2, &sConfigIC, TIM_CHANNEL_3) != HAL_OK)
   {
     Error_Handler();
   }
@@ -234,27 +278,6 @@ static void MX_UART4_Init(void)
 
 }
 
-/* USART2 init function */
-static void MX_USART2_UART_Init(void)
-{
-
-  huart2.Instance = USART2;
-  huart2.Init.BaudRate = 9600;
-  huart2.Init.WordLength = UART_WORDLENGTH_8B;
-  huart2.Init.StopBits = UART_STOPBITS_1;
-  huart2.Init.Parity = UART_PARITY_NONE;
-  huart2.Init.Mode = UART_MODE_RX;
-  huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart2.Init.OverSampling = UART_OVERSAMPLING_8;
-  huart2.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
-  huart2.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
-  if (HAL_UART_Init(&huart2) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-}
-
 /** 
   * Enable DMA controller clock
   */
@@ -265,9 +288,9 @@ static void MX_DMA_Init(void)
   __HAL_RCC_DMA1_CLK_ENABLE();
 
   /* DMA interrupt init */
-  /* DMA1_Channel6_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Channel6_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(DMA1_Channel6_IRQn);
+  /* DMA1_Channel1_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
   /* DMA2_Channel5_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA2_Channel5_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA2_Channel5_IRQn);
@@ -323,6 +346,7 @@ static void MX_DMA_Init(void)
      PB4   ------> LCD_SEG8
      PB5   ------> LCD_SEG9
      PB6   ------> I2C1_SCL
+     PB7   ------> LCD_SEG21
      PB9   ------> LCD_COM3
 */
 static void MX_GPIO_Init(void)
@@ -416,10 +440,10 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pins : SEG21_Pin SEG2_Pin SEG20_Pin SEG3_Pin 
                            SEG19_Pin SEG4_Pin SEG11_Pin SEG12_Pin 
-                           COM3_Pin */
+                           PB7 COM3_Pin */
   GPIO_InitStruct.Pin = SEG21_Pin|SEG2_Pin|SEG20_Pin|SEG3_Pin 
                           |SEG19_Pin|SEG4_Pin|SEG11_Pin|SEG12_Pin 
-                          |COM3_Pin;
+                          |GPIO_PIN_7|COM3_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;

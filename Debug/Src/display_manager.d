@@ -28,6 +28,8 @@ Src/display_manager.o: ../Src/display_manager.c \
  G:/lastchance/maybethistimemythesis/Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_lptim.h \
  G:/lastchance/maybethistimemythesis/Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_pwr.h \
  G:/lastchance/maybethistimemythesis/Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_pwr_ex.h \
+ G:/lastchance/maybethistimemythesis/Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim.h \
+ G:/lastchance/maybethistimemythesis/Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim_ex.h \
  G:/lastchance/maybethistimemythesis/Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h \
  G:/lastchance/maybethistimemythesis/Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h \
  G:/lastchance/maybethistimemythesis/Drivers/STM32L476G-Discovery/stm32l476g_discovery_glass_lcd.h \
@@ -90,6 +92,10 @@ G:/lastchance/maybethistimemythesis/Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_h
 G:/lastchance/maybethistimemythesis/Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_pwr.h:
 
 G:/lastchance/maybethistimemythesis/Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_pwr_ex.h:
+
+G:/lastchance/maybethistimemythesis/Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim.h:
+
+G:/lastchance/maybethistimemythesis/Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim_ex.h:
 
 G:/lastchance/maybethistimemythesis/Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h:
 
