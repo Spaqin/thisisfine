@@ -7,6 +7,7 @@
 #define DATA 1
 #define TITLE_DOT 0x1
 #define DATA_DOT 0x2
+#define NO_DOTS 0
 
 typedef union {
 	uint8_t* no_dot;

@@ -39,7 +39,7 @@ void disp_mgr_timer_handler(void)
 		//set new autoreload value
 		_disp_mgr.timer_handle->State= HAL_LPTIM_STATE_BUSY;
 		__HAL_LPTIM_AUTORELOAD_SET(_disp_mgr.timer_handle,disp_data.title_delay);
-		_disp_mgr.timer_handle->State= HAL_LPTIM_STATE_BUSY;
+		_disp_mgr.timer_handle->State= HAL_LPTIM_STATE_READY;
 		disp_data.callback_after_title();
 	}
 	else
@@ -55,7 +55,7 @@ void disp_mgr_timer_handler(void)
 
 		_disp_mgr.timer_handle->State= HAL_LPTIM_STATE_BUSY;
 		__HAL_LPTIM_AUTORELOAD_SET(_disp_mgr.timer_handle,disp_data.data_delay);
-		_disp_mgr.timer_handle->State= HAL_LPTIM_STATE_BUSY;
+		_disp_mgr.timer_handle->State= HAL_LPTIM_STATE_READY;
 
 	}
 

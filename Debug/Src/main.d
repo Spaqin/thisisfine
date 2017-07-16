@@ -18,6 +18,8 @@ Src/main.o: ../Src/main.c G:/lastchance/maybethistimemythesis/Inc/main.h \
  G:/lastchance/maybethistimemythesis/Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_gpio_ex.h \
  G:/lastchance/maybethistimemythesis/Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_dma.h \
  G:/lastchance/maybethistimemythesis/Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_cortex.h \
+ G:/lastchance/maybethistimemythesis/Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_adc.h \
+ G:/lastchance/maybethistimemythesis/Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_adc_ex.h \
  G:/lastchance/maybethistimemythesis/Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_flash.h \
  G:/lastchance/maybethistimemythesis/Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_flash_ex.h \
  G:/lastchance/maybethistimemythesis/Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_flash_ramfunc.h \
@@ -35,6 +37,8 @@ Src/main.o: ../Src/main.c G:/lastchance/maybethistimemythesis/Inc/main.h \
  G:/lastchance/maybethistimemythesis/Inc/display_manager.h \
  G:/lastchance/maybethistimemythesis/Drivers/STM32L476G-Discovery/stm32l476g_discovery_glass_lcd.h \
  G:/lastchance/maybethistimemythesis/Drivers/STM32L476G-Discovery/stm32l476g_discovery.h \
+ G:/lastchance/maybethistimemythesis/Inc/mq7.h \
+ G:/lastchance/maybethistimemythesis/Inc/dht11.h \
  G:/lastchance/maybethistimemythesis/Inc/display_manager.h
 
 G:/lastchance/maybethistimemythesis/Inc/main.h:
@@ -77,6 +81,10 @@ G:/lastchance/maybethistimemythesis/Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_h
 
 G:/lastchance/maybethistimemythesis/Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_cortex.h:
 
+G:/lastchance/maybethistimemythesis/Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_adc.h:
+
+G:/lastchance/maybethistimemythesis/Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_adc_ex.h:
+
 G:/lastchance/maybethistimemythesis/Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_flash.h:
 
 G:/lastchance/maybethistimemythesis/Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_flash_ex.h:
@@ -110,5 +118,9 @@ G:/lastchance/maybethistimemythesis/Inc/display_manager.h:
 G:/lastchance/maybethistimemythesis/Drivers/STM32L476G-Discovery/stm32l476g_discovery_glass_lcd.h:
 
 G:/lastchance/maybethistimemythesis/Drivers/STM32L476G-Discovery/stm32l476g_discovery.h:
+
+G:/lastchance/maybethistimemythesis/Inc/mq7.h:
+
+G:/lastchance/maybethistimemythesis/Inc/dht11.h:
 
 G:/lastchance/maybethistimemythesis/Inc/display_manager.h:

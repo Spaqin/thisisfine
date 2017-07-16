@@ -21,6 +21,8 @@ Drivers/STM32L476G-Discovery/stm32l476g_discovery_glass_lcd.o: \
  G:/lastchance/maybethistimemythesis/Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_gpio_ex.h \
  G:/lastchance/maybethistimemythesis/Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_dma.h \
  G:/lastchance/maybethistimemythesis/Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_cortex.h \
+ G:/lastchance/maybethistimemythesis/Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_adc.h \
+ G:/lastchance/maybethistimemythesis/Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_adc_ex.h \
  G:/lastchance/maybethistimemythesis/Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_flash.h \
  G:/lastchance/maybethistimemythesis/Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_flash_ex.h \
  G:/lastchance/maybethistimemythesis/Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_flash_ramfunc.h \
@@ -76,6 +78,10 @@ G:/lastchance/maybethistimemythesis/Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_h
 G:/lastchance/maybethistimemythesis/Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_dma.h:
 
 G:/lastchance/maybethistimemythesis/Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_cortex.h:
+
+G:/lastchance/maybethistimemythesis/Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_adc.h:
+
+G:/lastchance/maybethistimemythesis/Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_adc_ex.h:
 
 G:/lastchance/maybethistimemythesis/Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_flash.h:
 

@@ -7,6 +7,7 @@ C_SRCS += \
 ../Src/dht11.c \
 ../Src/display_manager.c \
 ../Src/main.c \
+../Src/mq7.c \
 ../Src/pmsensor.c \
 ../Src/stm32l4xx_hal_msp.c \
 ../Src/stm32l4xx_it.c \
@@ -16,6 +17,7 @@ OBJS += \
 ./Src/dht11.o \
 ./Src/display_manager.o \
 ./Src/main.o \
+./Src/mq7.o \
 ./Src/pmsensor.o \
 ./Src/stm32l4xx_hal_msp.o \
 ./Src/stm32l4xx_it.o \
@@ -25,6 +27,7 @@ C_DEPS += \
 ./Src/dht11.d \
 ./Src/display_manager.d \
 ./Src/main.d \
+./Src/mq7.d \
 ./Src/pmsensor.d \
 ./Src/stm32l4xx_hal_msp.d \
 ./Src/stm32l4xx_it.d \
