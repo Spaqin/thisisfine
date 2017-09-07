@@ -11,27 +11,27 @@
 #define QUERY_HANDSHAKE 0xF1
 
 #ifndef BUILDDAY
-#define BUILDDAY 01
+#define BUILDDAY 1
 #endif
 
 #ifndef BUILDMONTH
-#define BUILDMONTH 09
+#define BUILDMONTH 9
 #endif
 
-typedef enum Sensor {
+typedef enum {
   Temperature = 0x0,
   Humidity = 0x1,
   PM25 = 0x2,
   PM10 = 0x3,
   CO = 0x4
-};
+} Sensor;
 
-typedef struct FineMessage {
+typedef struct {
     char header;
     char command;
     char data[2];
     char checksum;
-};
+} FineMessage;
 
 typedef struct FineProtocol {
     // Receiving-related:
@@ -45,7 +45,7 @@ typedef struct FineProtocol {
     // Misc:
     uint16_t continuous_timer; // counter for timer [in seconds], btw i hate how it's not just "continous", but someone put an extra u in there for no reason at all goddamn
     uint8_t pri;  // protocol iterator for continous mode
-};
+} FineProtocol;
 
 FineProtocol _fineproto;
 

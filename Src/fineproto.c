@@ -17,7 +17,7 @@ void fp_parse_all_messages()
 {
   while(_fineproto.rdi != _fineproto.rci)
   {
-    parse_message(_fineproto.rcv_queue[_fineproto.rdi];
+    fp_parse_message(_fineproto.rcv_queue[_fineproto.rdi]);
     _fineproto.rdi++;
     _fineproto.rdi %= QUEUE_SIZE;
   }
@@ -87,7 +87,7 @@ void _fp_continuous_stop()
 void _fp_continuous_advance()
 {
   // iterate over callbacks until a configured sensor comes up 
-  while(_fineproto.get_data_for[_fineproto.pri] == NULL)
+  while(_fineproto.get_data_for[_fineproto.pri] == 0)
   {
     _fineproto.pri++;
     _fineproto.pri &= 0xF;
