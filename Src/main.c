@@ -31,7 +31,6 @@
   ******************************************************************************
   */
 /* Includes ------------------------------------------------------------------*/
-#include <sds011.h>
 #include "main.h"
 #include "stm32l4xx_hal.h"
 
@@ -50,6 +49,8 @@ LPTIM_HandleTypeDef hlptim2;
 UART_HandleTypeDef huart4;
 UART_HandleTypeDef huart2;
 DMA_HandleTypeDef hdma_uart4_rx;
+DMA_HandleTypeDef hdma_usart2_rx;
+DMA_HandleTypeDef hdma_usart2_tx;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
@@ -358,6 +359,12 @@ static void MX_DMA_Init(void)
   /* DMA1_Channel1_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
+  /* DMA1_Channel6_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel6_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel6_IRQn);
+  /* DMA1_Channel7_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel7_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel7_IRQn);
   /* DMA2_Channel5_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA2_Channel5_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA2_Channel5_IRQn);
@@ -414,7 +421,6 @@ static void MX_DMA_Init(void)
      PB5   ------> LCD_SEG9
      PB6   ------> I2C1_SCL
      PB7   ------> LCD_SEG21
-     PB9   ------> LCD_COM3
 */
 static void MX_GPIO_Init(void)
 {
@@ -507,10 +513,10 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pins : SEG21_Pin SEG2_Pin SEG20_Pin SEG3_Pin 
                            SEG19_Pin SEG4_Pin SEG11_Pin SEG12_Pin 
-                           PB7 COM3_Pin */
+                           PB7 */
   GPIO_InitStruct.Pin = SEG21_Pin|SEG2_Pin|SEG20_Pin|SEG3_Pin 
                           |SEG19_Pin|SEG4_Pin|SEG11_Pin|SEG12_Pin 
-                          |GPIO_PIN_7|COM3_Pin;
+                          |GPIO_PIN_7;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -629,6 +635,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(BT_ENABLE_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : DHT11_Pin */
+  GPIO_InitStruct.Pin = DHT11_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(DHT11_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : XL_CS_Pin */
   GPIO_InitStruct.Pin = XL_CS_Pin;

@@ -9,8 +9,8 @@ void fineproto_init()
 {
   memset(&_fineproto, 0, sizeof(FineProtocol));
   _fineproto.rdi = QUEUE_SIZE-1;
-  //TODO: send >>AT+START\r\n<< to bt
   //and start DMA
+  HAL_UART_Receive_DMA(&HM10_UART, &_fineproto.last_rcv, 5);
 }
 
 void fp_parse_all_messages()

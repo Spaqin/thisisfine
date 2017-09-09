@@ -18,6 +18,8 @@
 #define BUILDMONTH 9
 #endif
 
+#include "hm10.h"
+
 typedef enum {
   Temperature = 0x0,
   Humidity = 0x1,
