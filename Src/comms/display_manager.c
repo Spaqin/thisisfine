@@ -1,6 +1,6 @@
-#include "display_manager.h"
+#include "comms/display_manager.h"
 
-char _no_data[] = "NODATA";
+uint8_t _no_data[] = "NODATA";
 
 /**
  * Initialization function.

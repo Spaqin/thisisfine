@@ -5,7 +5,7 @@
  *      Author: Spaqin
  */
 
-#include "hm10.h"
+#include "comms/hm10.h"
 
 void hm10_init()
 {
@@ -26,6 +26,7 @@ void hm10_init()
 	hm10_send_AT_message("START");
 	//start connection, set name, start working
 }
+
 void hm10_send_AT_message(char* msg)
 {
 	char* buffer[32];
@@ -33,9 +34,9 @@ void hm10_send_AT_message(char* msg)
 	sprintf(buffer, pattern, msg); //could be done manually to be faster
 	uint32_t len = strlen(msg) + 5;
 	// actually send message
-	HAL_UART_Transmit(&HM10_UART, buffer, len, 10000);
-
+	HAL_UART_Transmit(&HM10_UART, buffer, len, 40000);
 }
+
 void hm10_send_message(uint8_t* msg, uint32_t size)
 {
 	HAL_UART_Transmit_DMA(&HM10_UART, msg, size);

@@ -4,7 +4,9 @@
  *  Created on: 8 maj 2017
  *      Author: Spaqin
  */
-#include <sds011.h>
+#include "sensors/sds011.h"
+
+
 const uint8_t _data_pattern[] = "%d";
 const uint16_t _pm25_title[] = {'P', 'M', '2' | DOT, '5' | DOUBLE_DOT, ' ', ' '};
 const uint16_t _pm10_title[] = {'P', 'M', '1', '0' | DOUBLE_DOT, ' ', ' '};
@@ -167,7 +169,15 @@ void pm10_display_callback(void)
 }
 
 
+uint16_t _sds011_get_pm25()
+{
+	return all_pm_data.pm25_data.average;
+}
 
 
+uint16_t _sds011_get_pm10()
+{
+	return all_pm_data.pm10_data.average;
+}
 
 

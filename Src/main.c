@@ -35,8 +35,11 @@
 #include "stm32l4xx_hal.h"
 
 /* USER CODE BEGIN Includes */
-#include "mq7.h"
-#include "display_manager.h"
+#include "sensors/mq7.h"
+#include "sensors/sds011.h"
+#include "comms/display_manager.h"
+#include "comms/hm10.h"
+#include "comms/fineproto.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -109,6 +112,7 @@ int main(void)
   dht11_init();
   mq7_init(&hadc1);
   disp_mgr_init(&hlptim1);
+  hm10_init();
 
   /* USER CODE END 2 */
 
@@ -412,7 +416,6 @@ static void MX_DMA_Init(void)
      PA9   ------> LCD_COM1
      PA10   ------> LCD_COM2
      PA11   ------> USB_OTG_FS_DM
-     PA12   ------> USB_OTG_FS_DP
      PA15   ------> LCD_SEG17
      PD1   ------> SPI2_SCK
      PD3   ------> SPI2_MISO

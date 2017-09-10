@@ -9,7 +9,8 @@
 #define DHT11_H_
 
 #include "stm32l4xx_hal.h"
-#include "display_manager.h"
+#include "comms/display_manager.h"
+#include "comms/fineproto.h"
 
 typedef struct {
 	uint8_t humidity_int;
@@ -30,6 +31,8 @@ int _dht11_parse_results();
 void _dht11_hum_title_callback();
 void _dht11_temp_title_callback();
 void _dht11_dma_callback();
+uint16_t _dht11_get_temp();
+uint16_t _dht11_get_humidity();
 
 
 #endif /* DHT11_H_ */

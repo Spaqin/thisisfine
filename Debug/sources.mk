@@ -17,6 +17,8 @@ C_DEPS :=
 SUBDIRS := \
 Drivers/STM32L476G-Discovery \
 Drivers/STM32L4xx_HAL_Driver/Src \
+Src/comms \
 Src \
+Src/sensors \
 startup \
 

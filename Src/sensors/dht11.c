@@ -5,17 +5,13 @@
  *      Author: Spaqin
  */
 
-#include "dht11.h"
+#include "sensors/dht11.h"
 
 
 const char humidity_title[] = "HUMDTY";
 const char temperature_title[] = "TEMP";
-const char temp_pattern[] = "%2d*";
-
-int haha = 0;
-
-extern DMA_HandleTypeDef hdma_tim2_ch2_ch4;
-extern TIM_HandleTypeDef htim2;
+const char temperature_pattern[] = "%d.%d°";
+const char humidity_pattern[] = "%d.%d%%";
 
 uint32_t _dht11_timing_data[41];
 void dht11_init()
@@ -45,18 +41,15 @@ void dht11_init()
 	dht11_temp_disp.title_delay = 512; // 2s
 	dht11_temp_disp.level = 0;
 	disp_mgr_register(dht11_temp_disp);
+	fineproto_add_sensor(_dht11_get_temp, Temperature);
+	fineproto_add_sensor(_dht11_get_humidity, Humidity);
 
-    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_2, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(DHT11_GPIO_Port, DHT11_Pin, GPIO_PIN_RESET);
 }
 
 void _dht11_init_measurement()
 {
 	GPIO_InitTypeDef GPIO_InitStruct;
-    GPIO_InitStruct.Pin = DHT11_Pin;
-    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-    HAL_GPIO_Init(DHT11_GPIO_Port, &GPIO_InitStruct);
     GPIO_InitStruct.Pin = DHT11_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
@@ -65,9 +58,6 @@ void _dht11_init_measurement()
     //and it's hard-coded for the CPU speed
     //i *really* wanted to make it with a timer, input capture DMA
     //but i couldn't get it to work ;_;
-    HAL_GPIO_WritePin(DHT11_GPIO_Port, DHT11_Pin, GPIO_PIN_RESET);
-    int i = 400000;
-    while(--i);
     __disable_irq();
     HAL_GPIO_WritePin(DHT11_GPIO_Port, DHT11_Pin, GPIO_PIN_SET);
     HAL_GPIO_Init(DHT11_GPIO_Port, &GPIO_InitStruct);
@@ -96,7 +86,7 @@ void _dht11_init_measurement()
     	_dht11_timing_data[j] = cnt;
     }
     __enable_irq();
-
+    HAL_GPIO_WritePin(DHT11_GPIO_Port, DHT11_Pin, GPIO_PIN_RESET);
 }
 
 int _dht11_parse_results()
@@ -132,7 +122,7 @@ void _dht11_hum_title_callback()
 	char buffer[7];
 	char* buf_it = buffer;
 	int i;
-	sprintf(buffer, "%d.%d%%", _dht11_data.humidity_int, _dht11_data.humidity_dec);
+	sprintf(buffer, humidity_pattern, _dht11_data.humidity_int, _dht11_data.humidity_dec);
 	_dht11_data.humidity_text[0] = ' ';
 	for(i = 0; *buf_it; buf_it++)
 	{
@@ -159,7 +149,7 @@ void _dht11_temp_title_callback()
 	char buffer[7];
 	char* buf_it = buffer;
 	int i;
-	sprintf(buffer, "%d.%d°", _dht11_data.temperature_int, _dht11_data.temperature_dec);
+	sprintf(buffer, temperature_pattern, _dht11_data.temperature_int, _dht11_data.temperature_dec);
 	_dht11_data.temperature_text[0] = ' ';
 	for(i = 0; *buf_it; buf_it++)
 	{
@@ -176,3 +166,14 @@ void _dht11_temp_title_callback()
 	_dht11_data.temperature_text[i+1] = 0;
 
 }
+
+uint16_t _dht11_get_temp()
+{
+	return _dht11_data.temperature_int;
+}
+
+uint16_t _dht11_get_humidity()
+{
+	return _dht11_data.humidity_int;
+}
+

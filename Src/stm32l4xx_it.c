@@ -36,7 +36,9 @@
 #include "stm32l4xx_it.h"
 
 /* USER CODE BEGIN 0 */
-#include "display_manager.h"
+#include "comms/display_manager.h"
+#include "comms/fineproto.h"
+#include "sensors/sds011.h"
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
@@ -190,13 +192,25 @@ void LPTIM1_IRQHandler(void)
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 
 	if(huart->Instance == UART4)
+	{
 		if(parse_buffer_data()) //restart transmission if something went wrong
 			HAL_UART_Receive_DMA(&huart4, all_pm_data.usart_data, 10);
+	}
+	else if(huart->Instance == USART2)
+	{
+		if(_fp_got_message())
+			HAL_UART_Receive_DMA(&HM10_UART, (uint8_t*) &_fineproto.last_rcv, 5);
+	}
 }
 
 void HAL_LPTIM_AutoReloadMatchCallback(LPTIM_HandleTypeDef* hlptim)
 {
-	  disp_mgr_timer_handler();
+	if(hlptim->Instance == LPTIM1)
+		disp_mgr_timer_handler();
+	else //LPTIM2
+		_fp_continuous_advance();
 }
+
+
 /* USER CODE END 1 */
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

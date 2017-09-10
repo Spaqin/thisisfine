@@ -10,7 +10,7 @@
 #ifndef pmsensor
 #define pmsensor
 #include "stm32l4xx_hal.h"
-#include "display_manager.h"
+#include "comms/display_manager.h"
 
 /* Struct describing values from the sensor for PM2.5 or PM10, averaged for smoothing
  * values are held in a cyclic buffer, overwritten when
@@ -31,14 +31,14 @@ typedef struct {
 	uint8_t usart_data[10];
 	uint8_t usart_data_ptr;
 	uint32_t total_cycles; //debug info
-	uint8_t* data_pattern;
-	uint16_t* pm25_title;
-	uint16_t* pm10_title;
+	const uint8_t* data_pattern;
+	const uint16_t* pm25_title;
+	const uint16_t* pm10_title;
 	uint16_t pm25_data_string[7];
 	uint16_t pm10_data_string[7];
 	//remember about decimal point (div by 10 for value)
-	uint16_t* pm25_thresholds;
-	uint16_t* pm10_thresholds;
+	const uint16_t* pm25_thresholds;
+	const uint16_t* pm10_thresholds;
 } sds011_data_t;
 
 sds011_data_t all_pm_data;
@@ -54,4 +54,6 @@ void pm_register_data_to_disp(void);
 void pm25_display_callback(void);
 void pm10_display_callback(void);
 uint8_t parse_buffer_data(void);
+uint16_t _sds011_get_pm25(void);
+uint16_t _sds011_get_pm10(void);
 #endif
