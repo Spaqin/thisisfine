@@ -23,7 +23,7 @@ void mq7_init(ADC_HandleTypeDef* adch)
 	mq7_disp.level = 0;
 	disp_mgr_register(mq7_disp);
 	fineproto_add_sensor(_mq7_get_value, CO);
-	HAL_ADC_Start_DMA(adch, (uint8_t*) _mq7_data.raw_adc, 8);
+	HAL_ADC_Start_DMA(adch, (uint32_t*) _mq7_data.raw_adc, 8);
 	mq7_adch = adch;
 }
 
@@ -41,7 +41,7 @@ void _mq7_callback()
 	// OK. This is not PPM. The problem is that the only thing with this sensor's datasheet you get,
 	// is ratio of resistance at current level and at 100ppm. I don't know either, so this will require further investigation.
 	// Known data, to be exact. This is also why I don't include a level indicator.
-	sprintf(_mq7_data.co_text, mq7_pattern, voltage);
+	sprintf((char*) _mq7_data.co_text, mq7_pattern, voltage);
 }
 
 

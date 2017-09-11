@@ -44,10 +44,11 @@
 /* External variables --------------------------------------------------------*/
 extern DMA_HandleTypeDef hdma_adc1;
 extern LPTIM_HandleTypeDef hlptim1;
+extern LPTIM_HandleTypeDef hlptim2;
 extern DMA_HandleTypeDef hdma_uart4_rx;
 extern DMA_HandleTypeDef hdma_usart2_rx;
 extern DMA_HandleTypeDef hdma_usart2_tx;
-extern UART_HandleTypeDef huart4;
+extern UART_HandleTypeDef huart2;
 
 /******************************************************************************/
 /*            Cortex-M4 Processor Interruption and Exception Handlers         */ 
@@ -144,20 +145,17 @@ void DMA1_Channel7_IRQHandler(void)
 }
 
 /**
-* @brief This function handles UART4 global interrupt.
+* @brief This function handles USART2 global interrupt.
 */
-void UART4_IRQHandler(void)
+void USART2_IRQHandler(void)
 {
-  /* USER CODE BEGIN UART4_IRQn 0 */
+  /* USER CODE BEGIN USART2_IRQn 0 */
 
-  /* USER CODE END UART4_IRQn 0 */
-  HAL_UART_IRQHandler(&huart4);
-  /* USER CODE BEGIN UART4_IRQn 1 */
- //parse_buffer_data();
- //__HAL_UART_FLUSH_DRREGISTER(&huart4);
- //HAL_UART_Receive_IT(&huart4, all_data.usart_data, 10);
+  /* USER CODE END USART2_IRQn 0 */
+  HAL_UART_IRQHandler(&huart2);
+  /* USER CODE BEGIN USART2_IRQn 1 */
 
-  /* USER CODE END UART4_IRQn 1 */
+  /* USER CODE END USART2_IRQn 1 */
 }
 
 /**
@@ -166,7 +164,7 @@ void UART4_IRQHandler(void)
 void DMA2_Channel5_IRQHandler(void)
 {
   /* USER CODE BEGIN DMA2_Channel5_IRQn 0 */
-	//HAL_NVIC_ClearPendingIRQ(DMA2_Channel5_IRQn);
+
   /* USER CODE END DMA2_Channel5_IRQn 0 */
   HAL_DMA_IRQHandler(&hdma_uart4_rx);
   /* USER CODE BEGIN DMA2_Channel5_IRQn 1 */
@@ -188,18 +186,38 @@ void LPTIM1_IRQHandler(void)
   /* USER CODE END LPTIM1_IRQn 1 */
 }
 
+/**
+* @brief This function handles LPTIM2 global interrupt.
+*/
+void LPTIM2_IRQHandler(void)
+{
+  /* USER CODE BEGIN LPTIM2_IRQn 0 */
+
+  /* USER CODE END LPTIM2_IRQn 0 */
+  HAL_LPTIM_IRQHandler(&hlptim2);
+  /* USER CODE BEGIN LPTIM2_IRQn 1 */
+
+  /* USER CODE END LPTIM2_IRQn 1 */
+}
+
 /* USER CODE BEGIN 1 */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 
 	if(huart->Instance == UART4)
 	{
 		if(parse_buffer_data()) //restart transmission if something went wrong
-			HAL_UART_Receive_DMA(&huart4, all_pm_data.usart_data, 10);
+		{
+			HAL_UART_DMAStop(huart);
+			HAL_UART_Receive_DMA(huart, all_pm_data.usart_data, 10);
+		}
 	}
 	else if(huart->Instance == USART2)
 	{
 		if(_fp_got_message())
-			HAL_UART_Receive_DMA(&HM10_UART, (uint8_t*) &_fineproto.last_rcv, 5);
+		{
+			HAL_UART_DMAStop(huart);
+			HAL_UART_Receive_DMA(huart, (uint8_t*) &_fineproto.last_rcv, 5);
+		}
 	}
 }
 
@@ -210,7 +228,6 @@ void HAL_LPTIM_AutoReloadMatchCallback(LPTIM_HandleTypeDef* hlptim)
 	else //LPTIM2
 		_fp_continuous_advance();
 }
-
 
 /* USER CODE END 1 */
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

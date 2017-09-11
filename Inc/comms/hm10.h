@@ -1,4 +1,5 @@
 #include "stm32l4xx_hal.h"
+#include <string.h>
 #define HM10_UART huart2
 
 extern UART_HandleTypeDef HM10_UART;

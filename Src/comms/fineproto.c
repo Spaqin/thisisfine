@@ -100,7 +100,8 @@ void _fp_continuous_advance()
 
 uint32_t _fp_got_message()
 {
-	if(_fp_calculate_checksum(_fineproto.last_rcv) != _fineproto.last_rcv.checksum || _fineproto.last_rcv.header != 0xF2)
+	FineMessage temp = _fineproto.last_rcv;
+	if(temp.header != 0xF2 || _fp_calculate_checksum(temp) != temp.checksum)
 		return 1;
 	_fineproto.rcv_queue[_fineproto.rci] = _fineproto.last_rcv;
 	_fineproto.rci++;

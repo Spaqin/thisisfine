@@ -14,7 +14,7 @@
 typedef struct {
 	uint16_t raw_adc[8];
 	uint16_t co_voltage;
-	int8_t co_text[7];
+	uint8_t co_text[7];
 } mq7_t;
 
 mq7_t _mq7_data;

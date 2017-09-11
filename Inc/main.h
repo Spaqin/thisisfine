@@ -53,6 +53,8 @@
 #define SAI1_SD_GPIO_Port GPIOE
 #define MFX_IRQ_OUT_Pin GPIO_PIN_13
 #define MFX_IRQ_OUT_GPIO_Port GPIOC
+#define DHT11_Pin GPIO_PIN_0
+#define DHT11_GPIO_Port GPIOH
 #define MAG_INT_Pin GPIO_PIN_1
 #define MAG_INT_GPIO_Port GPIOC
 #define MAG_DRDY_Pin GPIO_PIN_2
@@ -69,6 +71,8 @@
 #define BT_RX_GPIO_Port GPIOA
 #define MFX_WAKEUP_Pin GPIO_PIN_4
 #define MFX_WAKEUP_GPIO_Port GPIOA
+#define MQ7_Pin GPIO_PIN_5
+#define MQ7_GPIO_Port GPIOA
 #define SEG23_Pin GPIO_PIN_6
 #define SEG23_GPIO_Port GPIOA
 #define SEG0_Pin GPIO_PIN_7
@@ -177,8 +181,6 @@
 #define I2C1_SCL_GPIO_Port GPIOB
 #define BT_ENABLE_Pin GPIO_PIN_8
 #define BT_ENABLE_GPIO_Port GPIOB
-#define DHT11_Pin GPIO_PIN_9
-#define DHT11_GPIO_Port GPIOB
 #define XL_CS_Pin GPIO_PIN_0
 #define XL_CS_GPIO_Port GPIOE
 #define XL_INT_Pin GPIO_PIN_1

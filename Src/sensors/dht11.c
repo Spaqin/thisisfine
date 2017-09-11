@@ -44,12 +44,16 @@ void dht11_init()
 	fineproto_add_sensor(_dht11_get_temp, Temperature);
 	fineproto_add_sensor(_dht11_get_humidity, Humidity);
 
-    HAL_GPIO_WritePin(DHT11_GPIO_Port, DHT11_Pin, GPIO_PIN_RESET);
 }
 
 void _dht11_init_measurement()
 {
 	GPIO_InitTypeDef GPIO_InitStruct;
+    GPIO_InitStruct.Pin = DHT11_Pin;
+    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    HAL_GPIO_Init(DHT11_GPIO_Port, &GPIO_InitStruct);
     GPIO_InitStruct.Pin = DHT11_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
@@ -58,13 +62,16 @@ void _dht11_init_measurement()
     //and it's hard-coded for the CPU speed
     //i *really* wanted to make it with a timer, input capture DMA
     //but i couldn't get it to work ;_;
+    HAL_GPIO_WritePin(DHT11_GPIO_Port, DHT11_Pin, GPIO_PIN_RESET);
+    int i=400000;
+    while(--i);
     __disable_irq();
     HAL_GPIO_WritePin(DHT11_GPIO_Port, DHT11_Pin, GPIO_PIN_SET);
     HAL_GPIO_Init(DHT11_GPIO_Port, &GPIO_InitStruct);
     for(int j = 0; j < 41; ++j)
     {
     	int cnt = 0;
-    	while(!HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_2))
+    	while(!(DHT11_GPIO_Port->IDR & DHT11_Pin))
     	{
     		cnt++;
     		if(cnt > 30000)
@@ -74,7 +81,7 @@ void _dht11_init_measurement()
     		}
     	}
     	cnt = 0;
-    	while(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_2))
+    	while((DHT11_GPIO_Port->IDR & DHT11_Pin))
     	{
     		cnt++;
     		if(cnt > 30000)

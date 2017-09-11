@@ -96,10 +96,10 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc)
     /**ADC1 GPIO Configuration    
     PA5     ------> ADC1_IN10 
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_5;
+    GPIO_InitStruct.Pin = MQ7_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG_ADC_CONTROL;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+    HAL_GPIO_Init(MQ7_GPIO_Port, &GPIO_InitStruct);
 
     /* Peripheral DMA init*/
   
@@ -140,7 +140,7 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* hadc)
     /**ADC1 GPIO Configuration    
     PA5     ------> ADC1_IN10 
     */
-    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_5);
+    HAL_GPIO_DeInit(MQ7_GPIO_Port, MQ7_Pin);
 
     /* Peripheral DMA DeInit*/
     HAL_DMA_DeInit(hadc->DMA_Handle);
@@ -175,6 +175,9 @@ void HAL_LPTIM_MspInit(LPTIM_HandleTypeDef* hlptim)
   /* USER CODE END LPTIM2_MspInit 0 */
     /* Peripheral clock enable */
     __HAL_RCC_LPTIM2_CLK_ENABLE();
+    /* Peripheral interrupt init */
+    HAL_NVIC_SetPriority(LPTIM2_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(LPTIM2_IRQn);
   /* USER CODE BEGIN LPTIM2_MspInit 1 */
 
   /* USER CODE END LPTIM2_MspInit 1 */
@@ -207,6 +210,10 @@ void HAL_LPTIM_MspDeInit(LPTIM_HandleTypeDef* hlptim)
   /* USER CODE END LPTIM2_MspDeInit 0 */
     /* Peripheral clock disable */
     __HAL_RCC_LPTIM2_CLK_DISABLE();
+
+    /* Peripheral interrupt DeInit*/
+    HAL_NVIC_DisableIRQ(LPTIM2_IRQn);
+
   /* USER CODE BEGIN LPTIM2_MspDeInit 1 */
 
   /* USER CODE END LPTIM2_MspDeInit 1 */
@@ -246,7 +253,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
     hdma_uart4_rx.Init.MemInc = DMA_MINC_ENABLE;
     hdma_uart4_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
     hdma_uart4_rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
-    hdma_uart4_rx.Init.Mode = DMA_CIRCULAR;
+    hdma_uart4_rx.Init.Mode = DMA_NORMAL;
     hdma_uart4_rx.Init.Priority = DMA_PRIORITY_LOW;
     if (HAL_DMA_Init(&hdma_uart4_rx) != HAL_OK)
     {
@@ -312,6 +319,9 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
 
     __HAL_LINKDMA(huart,hdmatx,hdma_usart2_tx);
 
+    /* Peripheral interrupt init */
+    HAL_NVIC_SetPriority(USART2_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(USART2_IRQn);
   /* USER CODE BEGIN USART2_MspInit 1 */
 
   /* USER CODE END USART2_MspInit 1 */
@@ -338,10 +348,6 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
 
     /* Peripheral DMA DeInit*/
     HAL_DMA_DeInit(huart->hdmarx);
-
-    /* Peripheral interrupt DeInit*/
-    HAL_NVIC_DisableIRQ(UART4_IRQn);
-
   /* USER CODE BEGIN UART4_MspDeInit 1 */
 
   /* USER CODE END UART4_MspDeInit 1 */
@@ -363,6 +369,10 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
     /* Peripheral DMA DeInit*/
     HAL_DMA_DeInit(huart->hdmarx);
     HAL_DMA_DeInit(huart->hdmatx);
+
+    /* Peripheral interrupt DeInit*/
+    HAL_NVIC_DisableIRQ(USART2_IRQn);
+
   /* USER CODE BEGIN USART2_MspDeInit 1 */
 
   /* USER CODE END USART2_MspDeInit 1 */

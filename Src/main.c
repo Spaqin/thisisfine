@@ -64,12 +64,11 @@ void SystemClock_Config(void);
 void Error_Handler(void);
 static void MX_GPIO_Init(void);
 static void MX_DMA_Init(void);
-static void MX_UART4_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_LPTIM1_Init(void);
 static void MX_LPTIM2_Init(void);
-static void MX_NVIC_Init(void);
+static void MX_UART4_Init(void);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
@@ -98,26 +97,25 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_DMA_Init();
-  MX_UART4_Init();
   MX_ADC1_Init();
   MX_USART2_UART_Init();
   MX_LPTIM1_Init();
   MX_LPTIM2_Init();
-
-  /* Initialize interrupts */
-  MX_NVIC_Init();
+  MX_UART4_Init();
 
   /* USER CODE BEGIN 2 */
+  hm10_init();
+  fineproto_init();
   init_pm_data(&huart4);
   dht11_init();
   mq7_init(&hadc1);
   disp_mgr_init(&hlptim1);
-  hm10_init();
-
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  _fineproto.continuous_timer = 1;
+  _fp_continuous_setup();
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
@@ -206,15 +204,6 @@ void SystemClock_Config(void)
   HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
 }
 
-/** NVIC Configuration
-*/
-static void MX_NVIC_Init(void)
-{
-  /* UART4_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(UART4_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(UART4_IRQn);
-}
-
 /* ADC1 init function */
 static void MX_ADC1_Init(void)
 {
@@ -294,7 +283,7 @@ static void MX_LPTIM2_Init(void)
 
   hlptim2.Instance = LPTIM2;
   hlptim2.Init.Clock.Source = LPTIM_CLOCKSOURCE_APBCLOCK_LPOSC;
-  hlptim2.Init.Clock.Prescaler = LPTIM_PRESCALER_DIV1;
+  hlptim2.Init.Clock.Prescaler = LPTIM_PRESCALER_DIV128;
   hlptim2.Init.Trigger.Source = LPTIM_TRIGSOURCE_SOFTWARE;
   hlptim2.Init.OutputPolarity = LPTIM_OUTPUTPOLARITY_HIGH;
   hlptim2.Init.UpdateMode = LPTIM_UPDATE_IMMEDIATE;
@@ -334,7 +323,7 @@ static void MX_USART2_UART_Init(void)
 {
 
   huart2.Instance = USART2;
-  huart2.Init.BaudRate = 115200;
+  huart2.Init.BaudRate = 57600;
   huart2.Init.WordLength = UART_WORDLENGTH_8B;
   huart2.Init.StopBits = UART_STOPBITS_1;
   huart2.Init.Parity = UART_PARITY_NONE;
@@ -356,8 +345,8 @@ static void MX_USART2_UART_Init(void)
 static void MX_DMA_Init(void) 
 {
   /* DMA controller clock enable */
-  __HAL_RCC_DMA2_CLK_ENABLE();
   __HAL_RCC_DMA1_CLK_ENABLE();
+  __HAL_RCC_DMA2_CLK_ENABLE();
 
   /* DMA interrupt init */
   /* DMA1_Channel1_IRQn interrupt configuration */
@@ -416,6 +405,7 @@ static void MX_DMA_Init(void)
      PA9   ------> LCD_COM1
      PA10   ------> LCD_COM2
      PA11   ------> USB_OTG_FS_DM
+     PA12   ------> USB_OTG_FS_DP
      PA15   ------> LCD_SEG17
      PD1   ------> SPI2_SCK
      PD3   ------> SPI2_MISO
@@ -440,6 +430,9 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOE, AUDIO_RST_Pin|LD_G_Pin|XL_CS_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(DHT11_GPIO_Port, DHT11_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, LD_R_Pin|BT_ENABLE_Pin, GPIO_PIN_RESET);
@@ -475,6 +468,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_EVT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : DHT11_Pin */
+  GPIO_InitStruct.Pin = DHT11_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(DHT11_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PC0 PC12 */
   GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_12;
@@ -618,8 +618,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   HAL_GPIO_Init(GYRO_CS_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : PB3 */
-  GPIO_InitStruct.Pin = GPIO_PIN_3;
+  /*Configure GPIO pins : PB3 PB9 */
+  GPIO_InitStruct.Pin = GPIO_PIN_3|GPIO_PIN_9;
   GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
@@ -638,12 +638,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(BT_ENABLE_GPIO_Port, &GPIO_InitStruct);
-
-  /*Configure GPIO pin : DHT11_Pin */
-  GPIO_InitStruct.Pin = DHT11_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(DHT11_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : XL_CS_Pin */
   GPIO_InitStruct.Pin = XL_CS_Pin;

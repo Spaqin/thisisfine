@@ -29,12 +29,12 @@ void hm10_init()
 
 void hm10_send_AT_message(char* msg)
 {
-	char* buffer[32];
+	char buffer[32];
 	char pattern[] = "AT+%s\r\n";
 	sprintf(buffer, pattern, msg); //could be done manually to be faster
 	uint32_t len = strlen(msg) + 5;
 	// actually send message
-	HAL_UART_Transmit(&HM10_UART, buffer, len, 40000);
+	HAL_UART_Transmit(&HM10_UART, (uint8_t*) buffer, len, 40000);
 }
 
 void hm10_send_message(uint8_t* msg, uint32_t size)
