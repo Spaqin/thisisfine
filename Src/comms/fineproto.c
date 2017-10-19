@@ -57,7 +57,7 @@ void fp_parse_message(FineMessage message)
 			  _fineproto.to_send.data[1] = BUILDMONTH;
 			  break;
 		  case QUERY_CONTINOUS:
-			  _fineproto.continuous_timer = message.data[0]<<8 | message.data[1];
+			  _fineproto.continuous_timer = message.data[0] | message.data[1] << 8;
 			  _fp_continuous_setup();
 			  // no reply here!
 			  return;
@@ -71,7 +71,8 @@ void fp_parse_message(FineMessage message)
     }
     _fineproto.to_send.checksum = _fp_calculate_checksum(_fineproto.to_send);
   }
-  _fp_send_message();
+  if(_fp_send_message())
+	  _fp_continuous_stop();
 }
 
 void _fp_continuous_setup()
@@ -115,8 +116,8 @@ FineMessage _fp_create_data_message(Sensor sensor)
 	fm_to_ret.header = 0xF1;
 	fm_to_ret.command = 0x02 | (((uint8_t)sensor) << 4);
 	uint16_t sensor_data = _fineproto.get_data_for[sensor]();
-	fm_to_ret.data[0] = sensor_data >> 8;
-	fm_to_ret.data[1] = sensor_data & 0xFF;
+	fm_to_ret.data[0] = sensor_data & 0xFF;
+	fm_to_ret.data[1] = sensor_data >> 8;
 	fm_to_ret.checksum = _fp_calculate_checksum(fm_to_ret);
 	return fm_to_ret;
 }

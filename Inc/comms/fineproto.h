@@ -75,8 +75,8 @@ inline void _fp_continuous_stop(void)  // disables timer
 {
 	HAL_LPTIM_Counter_Stop(FP_CONT_MODE_LPTIM);
 }
-inline void _fp_send_message(void)
+inline uint32_t _fp_send_message(void)
 {
-	hm10_send_message((uint8_t*)&_fineproto.to_send, 5);
+	return hm10_send_message((uint8_t*)&_fineproto.to_send, 5);
 }
 #endif

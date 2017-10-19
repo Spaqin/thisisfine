@@ -176,11 +176,11 @@ void _dht11_temp_title_callback()
 
 uint16_t _dht11_get_temp()
 {
-	return _dht11_data.temperature_int;
+	return _dht11_data.temperature_int | _dht11_data.temperature_dec << 8;
 }
 
 uint16_t _dht11_get_humidity()
 {
-	return _dht11_data.humidity_int;
+	return _dht11_data.humidity_int | _dht11_data.humidity_dec << 8;
 }
 
