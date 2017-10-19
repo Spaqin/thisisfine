@@ -179,8 +179,8 @@
 #define SEG12_GPIO_Port GPIOB
 #define I2C1_SCL_Pin GPIO_PIN_6
 #define I2C1_SCL_GPIO_Port GPIOB
-#define BT_ENABLE_Pin GPIO_PIN_8
-#define BT_ENABLE_GPIO_Port GPIOB
+#define BT_STATUS_Pin GPIO_PIN_8
+#define BT_STATUS_GPIO_Port GPIOB
 #define XL_CS_Pin GPIO_PIN_0
 #define XL_CS_GPIO_Port GPIOE
 #define XL_INT_Pin GPIO_PIN_1

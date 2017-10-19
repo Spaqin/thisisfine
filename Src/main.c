@@ -435,7 +435,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(DHT11_GPIO_Port, DHT11_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, LD_R_Pin|BT_ENABLE_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, LD_R_Pin|BT_STATUS_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(OTG_FS_PowerSwitchOn_GPIO_Port, OTG_FS_PowerSwitchOn_Pin, GPIO_PIN_SET);
@@ -633,11 +633,11 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(I2C1_SCL_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : BT_ENABLE_Pin */
-  GPIO_InitStruct.Pin = BT_ENABLE_Pin;
+  GPIO_InitStruct.Pin = BT_STATUS_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(BT_ENABLE_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(BT_STATUS_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : XL_CS_Pin */
   GPIO_InitStruct.Pin = XL_CS_Pin;
