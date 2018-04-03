@@ -12,6 +12,10 @@
 #include "comms/display_manager.h"
 #include "comms/fineproto.h"
 
+#define DHT_DOWN_TIME 20000
+
+extern TIM_HandleTypeDef htim4;
+
 typedef struct {
 	uint8_t humidity_int;
 	uint8_t humidity_dec;
@@ -22,6 +26,8 @@ typedef struct {
 } DHT11_t;
 
 DHT11_t _dht11_data;
+uint32_t _dht11_timing_data[43];
+uint8_t dht_i;
 
 int dht11_get_humidity();
 int dht11_get_temperature();

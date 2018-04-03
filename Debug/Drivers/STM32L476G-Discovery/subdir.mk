@@ -21,7 +21,7 @@ Drivers/STM32L476G-Discovery/%.o: ../Drivers/STM32L476G-Discovery/%.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: MCU GCC Compiler'
 	@echo %cd%
-	arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32L476xx -I"G:/lastchance/maybethistimemythesis/Inc" -I"G:/lastchance/maybethistimemythesis/Drivers/STM32L4xx_HAL_Driver/Inc" -I"G:/lastchance/maybethistimemythesis/Drivers/STM32L4xx_HAL_Driver/Inc/Legacy" -I"G:/lastchance/maybethistimemythesis/Drivers/CMSIS/Device/ST/STM32L4xx/Include" -I"G:/lastchance/maybethistimemythesis/Drivers/CMSIS/Include" -I"G:/lastchance/maybethistimemythesis/Drivers/STM32L476G-Discovery"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" -o "$@" "$<"
+	arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32L476xx -I"G:/lastchance/finedevice/Inc" -I"G:/lastchance/finedevice/Drivers/STM32L4xx_HAL_Driver/Inc" -I"G:/lastchance/finedevice/Drivers/STM32L4xx_HAL_Driver/Inc/Legacy" -I"G:/lastchance/finedevice/Drivers/CMSIS/Device/ST/STM32L4xx/Include" -I"G:/lastchance/finedevice/Drivers/CMSIS/Include" -I"G:/lastchance/finedevice/Drivers/STM32L476G-Discovery"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

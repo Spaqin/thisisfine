@@ -28,8 +28,7 @@ typedef struct {
 	// bytes, in order:
 	// 0xAA, 0xC0, PM2.5 low, PM2.5 high, PM10 low, PM10 high, serial hi, serial lo, checksum, 0xAB
 	// buffer for the data, with an iterator
-	uint8_t usart_data[10];
-	uint8_t usart_data_ptr;
+
 	uint32_t total_cycles; //debug info
 	const uint8_t* data_pattern;
 	const uint16_t* pm25_title;
@@ -43,6 +42,9 @@ typedef struct {
 
 sds011_data_t all_pm_data;
 
+uint8_t sds_last_usart_byte;
+uint8_t sds_usart_data[4];
+uint8_t sds_buffered_data[4];
 
 uint16_t get_sum(pm_data_t*);
 uint16_t get_avg(pm_data_t*);
@@ -53,7 +55,7 @@ void calculate_avg(pm_data_t*);
 void pm_register_data_to_disp(void);
 void pm25_display_callback(void);
 void pm10_display_callback(void);
-uint8_t parse_buffer_data(void);
+uint8_t sds011_parse_buffer_data(void);
 uint16_t _sds011_get_pm25(void);
 uint16_t _sds011_get_pm10(void);
 #endif

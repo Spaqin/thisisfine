@@ -10,21 +10,38 @@
 
 const char humidity_title[] = "HUMDTY";
 const char temperature_title[] = "TEMP";
-const char temperature_pattern[] = "%d.%d°";
+const char temperature_pattern[] = "%d.%d°C";
 const char humidity_pattern[] = "%d.%d%%";
 
-uint32_t _dht11_timing_data[41];
+
 void dht11_init()
 {
-	_dht11_data.humidity_text[1] = '0';
-	_dht11_data.humidity_text[2] = '.';
-	_dht11_data.humidity_text[3] = '0';
-	_dht11_data.humidity_text[4] = '%';
-	_dht11_data.humidity_text[5] = ' ';
-	_dht11_data.humidity_text[6] = '\0';
+//	GPIO_InitTypeDef GPIO_InitStruct;
+//    GPIO_InitStruct.Pin = DHT_IC_Pin;
+//    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+//    GPIO_InitStruct.Pull = GPIO_PULLUP;
+//    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+//    HAL_GPIO_Init(DHT_IC_GPIO_Port, &GPIO_InitStruct);
+////    GPIO_InitStruct.Pin = DHT_IC_Pin;
+////    GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+////    GPIO_InitStruct.Pull = GPIO_NOPULL;
+////    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+//
+//    HAL_GPIO_WritePin(DHT_IC_GPIO_Port, DHT_IC_Pin, GPIO_PIN_SET);
+	_dht11_data.humidity_text[1] = '-' | DOT;
+	_dht11_data.humidity_text[2] = '-';
+	_dht11_data.humidity_text[3] = '%';
+	_dht11_data.humidity_text[4] = ' ';
+	_dht11_data.humidity_text[5] = '\0';
 	_dht11_data.humidity_text[0] = ' ';
+	_dht11_data.temperature_text[1] = '-' | DOT;
+	_dht11_data.temperature_text[2] = '-';
+	_dht11_data.temperature_text[3] = '°';
+	_dht11_data.temperature_text[4] = 'C';
+	_dht11_data.temperature_text[5] = '\0';
+	_dht11_data.temperature_text[0] = ' ';
 	Data_Display dht11_humidity_disp;
-	dht11_humidity_disp.callback_after_title = _dht11_hum_title_callback;
+	dht11_humidity_disp.callback_after_title = _dht11_init_measurement;
 	dht11_humidity_disp.title.no_dot = humidity_title;
 	dht11_humidity_disp.data.dot = _dht11_data.humidity_text;
 	dht11_humidity_disp.dot_info = DATA_DOT;
@@ -33,7 +50,7 @@ void dht11_init()
 	dht11_humidity_disp.level = 0;
 	disp_mgr_register(dht11_humidity_disp);
 	Data_Display dht11_temp_disp;
-	dht11_temp_disp.callback_after_title = _dht11_temp_title_callback;
+	dht11_temp_disp.callback_after_title = _dht11_init_measurement;
 	dht11_temp_disp.title.no_dot = temperature_title;
 	dht11_temp_disp.data.dot = _dht11_data.temperature_text;
 	dht11_temp_disp.dot_info = DATA_DOT;
@@ -49,67 +66,43 @@ void dht11_init()
 void _dht11_init_measurement()
 {
 	GPIO_InitTypeDef GPIO_InitStruct;
-    GPIO_InitStruct.Pin = DHT11_Pin;
+    GPIO_InitStruct.Pin = DHT_IC_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-    HAL_GPIO_Init(DHT11_GPIO_Port, &GPIO_InitStruct);
-    GPIO_InitStruct.Pin = DHT11_Pin;
-    GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-    //ok, it's not the perfect way. it blocks interrupts for up to ~4ms,
-    //and it's hard-coded for the CPU speed
-    //i *really* wanted to make it with a timer, input capture DMA
-    //but i couldn't get it to work ;_;
-    HAL_GPIO_WritePin(DHT11_GPIO_Port, DHT11_Pin, GPIO_PIN_RESET);
-    int i=400000;
-    while(--i);
-    __disable_irq();
-    HAL_GPIO_WritePin(DHT11_GPIO_Port, DHT11_Pin, GPIO_PIN_SET);
-    HAL_GPIO_Init(DHT11_GPIO_Port, &GPIO_InitStruct);
-    for(int j = 0; j < 41; ++j)
-    {
-    	int cnt = 0;
-    	while(!(DHT11_GPIO_Port->IDR & DHT11_Pin))
-    	{
-    		cnt++;
-    		if(cnt > 30000)
-    		{
-    			__enable_irq();
-    			return;
-    		}
-    	}
-    	cnt = 0;
-    	while((DHT11_GPIO_Port->IDR & DHT11_Pin))
-    	{
-    		cnt++;
-    		if(cnt > 30000)
-    		{
-    			__enable_irq();
-    			return;
-    		}
-    	}
-    	_dht11_timing_data[j] = cnt;
-    }
-    __enable_irq();
-    HAL_GPIO_WritePin(DHT11_GPIO_Port, DHT11_Pin, GPIO_PIN_RESET);
+    HAL_GPIO_Init(DHT_IC_GPIO_Port, &GPIO_InitStruct);
+
+    HAL_GPIO_WritePin(DHT_IC_GPIO_Port, DHT_IC_Pin, GPIO_PIN_RESET);
+    __HAL_TIM_SET_COUNTER(&htim4, 0);
+	__HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, (uint16_t)(__HAL_TIM_GET_COUNTER(&htim4) + DHT_DOWN_TIME));
+	__HAL_TIM_CLEAR_IT(&htim4, TIM_IT_CC1);
+    HAL_TIM_OC_Start_IT(&htim4, TIM_CHANNEL_1);
 }
 
 int _dht11_parse_results()
 {
-	uint32_t* bits = _dht11_timing_data + 1;
+	//find the offset
+	uint8_t offset = 0;
+	for(int i = 0; i < 40; ++i)
+	{
+		if(_dht11_timing_data[i] > 135 && _dht11_timing_data[i] < 200) //it's from 140 to 180
+		{
+			offset = i;
+			break;
+		}
+	}
+	uint32_t* bits = _dht11_timing_data + offset + 1;
 	uint8_t scratchpad[5] = { 0 };
 	uint8_t sum = 0;
 	for(int i = 0; i < 5; ++i)
 	{
 		for(int j = 0; j < 8; ++j)
 		{
-			scratchpad[i] |= bits[j] & 256 ? 1 : 0;
+			//timings are really well kept
 			scratchpad[i] <<= 1;
+			scratchpad[i] |= bits[j+i*8] > 100 ? 1 : 0;
 		}
 		sum += scratchpad[i];
-		bits += 8;
 	}
 	sum -= scratchpad[4];
 	if(sum != scratchpad[4])
@@ -118,29 +111,23 @@ int _dht11_parse_results()
 	_dht11_data.humidity_dec = scratchpad[1];
 	_dht11_data.temperature_int = scratchpad[2];
 	_dht11_data.temperature_dec = scratchpad[3];
+	_dht11_hum_title_callback();
+	_dht11_temp_title_callback();
 	return 0;
 }
 
 void _dht11_hum_title_callback()
 {
-	_dht11_init_measurement();
-	if(_dht11_parse_results())
-		return;
 	char buffer[7];
 	char* buf_it = buffer;
 	int i;
 	sprintf(buffer, humidity_pattern, _dht11_data.humidity_int, _dht11_data.humidity_dec);
-	_dht11_data.humidity_text[0] = ' ';
 	for(i = 0; *buf_it; buf_it++)
 	{
-		if(*buf_it != '.')
-		{
-			++i;
-			_dht11_data.humidity_text[i] = *buf_it;
-
+		if(*buf_it != '.') {
+			_dht11_data.humidity_text[i++] = *buf_it;
 		}
-		else
-		{
+		else {
 			_dht11_data.humidity_text[i] |= DOT;
 		}
 	}
@@ -150,15 +137,11 @@ void _dht11_hum_title_callback()
 
 void _dht11_temp_title_callback()
 {
-	_dht11_init_measurement();
-	if(_dht11_parse_results())
-		return;
 	char buffer[7];
 	char* buf_it = buffer;
 	int i;
 	sprintf(buffer, temperature_pattern, _dht11_data.temperature_int, _dht11_data.temperature_dec);
-	_dht11_data.temperature_text[0] = ' ';
-	for(i = 0; *buf_it; buf_it++)
+	for(i = -1; *buf_it; buf_it++)
 	{
 		if(*buf_it != '.')
 		{

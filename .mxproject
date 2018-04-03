@@ -1,7 +1,7 @@
 [PreviousGenFiles]
-HeaderPath=G:/lastchance/maybethistimemythesis/Inc
+HeaderPath=G:/lastchance/finedevice/Inc
 HeaderFiles=stm32l4xx_it.h;stm32l4xx_hal_conf.h;main.h;
-SourcePath=G:/lastchance/maybethistimemythesis/Src
+SourcePath=G:/lastchance/finedevice/Src
 SourceFiles=stm32l4xx_it.h;stm32l4xx_hal_conf.h;main.h;stm32l4xx_it.c;stm32l4xx_hal_msp.c;main.c;
 
 [PreviousLibFiles]

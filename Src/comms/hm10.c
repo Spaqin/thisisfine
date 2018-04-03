@@ -37,8 +37,8 @@ void hm10_send_AT_message(char* msg)
 
 uint32_t hm10_send_message(uint8_t* msg, uint32_t size)
 {
-	if(!HAL_GPIO_ReadPin(BT_STATUS_GPIO_Port, BT_STATUS_Pin))
-		return 1;
+	//if(!HAL_GPIO_ReadPin(BT_STATUS_GPIO_Port, BT_STATUS_Pin))
+		//return 1;
 	return HAL_UART_Transmit_DMA(&HM10_UART, msg, size);
 	// non-blocking, using DMA
 }

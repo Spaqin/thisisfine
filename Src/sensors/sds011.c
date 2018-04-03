@@ -5,7 +5,7 @@
  *      Author: Spaqin
  */
 #include "sensors/sds011.h"
-
+#include "comms/fineproto.h"
 
 const uint8_t _data_pattern[] = "%d";
 const uint16_t _pm25_title[] = {'P', 'M', '2' | DOT, '5' | DOUBLE_DOT, ' ', ' '};
@@ -42,14 +42,16 @@ float get_avgf(pm_data_t* pm_data) {
 void init_pm_data(UART_HandleTypeDef* huart) {
 	all_pm_data.current_ptr = 0;
 	all_pm_data.total_cycles = 0;
-	all_pm_data.usart_data_ptr = 0;
+	//all_pm_data.usart_data_ptr = 0;
 	all_pm_data.data_pattern = _data_pattern;
 	all_pm_data.pm25_title = _pm25_title;
 	all_pm_data.pm10_title = _pm10_title;
 	all_pm_data.pm25_thresholds = _pm25_thresholds;
 	all_pm_data.pm10_thresholds = _pm10_thresholds;
 	pm_register_data_to_disp();
-	HAL_UART_Receive_DMA(huart, all_pm_data.usart_data, 10);
+	fineproto_add_sensor(_sds011_get_pm25, PM25);
+	fineproto_add_sensor(_sds011_get_pm10, PM10);
+	HAL_UART_Receive_IT(huart, &sds_last_usart_byte, 1);
 }
 
 void calculate_avg(pm_data_t* pm_data){
@@ -59,27 +61,30 @@ void calculate_avg(pm_data_t* pm_data){
 // 0xAA, 0xC0, PM2.5 low, PM2.5 high, PM10 low, PM10 high, serial hi, serial lo, checksum, 0xAB
 // checksum = sum(pm2.5 low ~ serial lo)
 // maybe restart DMA transmission on error?
-uint8_t parse_buffer_data(void){
-	if(all_pm_data.usart_data[0] != 0xAA || all_pm_data.usart_data[1] != 0xC0 || all_pm_data.usart_data[9] != 0xAB)
-		return 1;
-	uint8_t checksum = 0;
-	checksum += all_pm_data.usart_data[2]; //pm2.5 lo
-	checksum += all_pm_data.usart_data[3]; //pm2.5 hi
-	checksum += all_pm_data.usart_data[4]; //pm10 lo
-	checksum += all_pm_data.usart_data[5]; //pm10 hi
-	checksum += all_pm_data.usart_data[6]; //serial hi
-	checksum += all_pm_data.usart_data[7]; //serial lo
-	if(checksum != all_pm_data.usart_data[8])
-		return 1;
-	uint8_t pm25_lo = all_pm_data.usart_data[2];
-	uint8_t pm25_hi = all_pm_data.usart_data[3];
-	uint8_t pm10_lo = all_pm_data.usart_data[4];
-	uint8_t pm10_hi = all_pm_data.usart_data[5];
-	uint16_t pm25_value = (pm25_hi<<8) | pm25_lo;
-	uint16_t pm10_value = (pm10_hi<<8) | pm10_lo;
+uint8_t sds011_parse_buffer_data(void){
+//	if(all_pm_data.usart_data[0] != 0xAA || all_pm_data.usart_data[1] != 0xC0 || all_pm_data.usart_data[9] != 0xAB)
+//		return 1;
+//	uint8_t checksum = 0;
+//	checksum += all_pm_data.usart_data[2]; //pm2.5 lo
+//	checksum += all_pm_data.usart_data[3]; //pm2.5 hi
+//	checksum += all_pm_data.usart_data[4]; //pm10 lo
+//	checksum += all_pm_data.usart_data[5]; //pm10 hi
+//	checksum += all_pm_data.usart_data[6]; //serial hi
+//	checksum += all_pm_data.usart_data[7]; //serial lo
+//	if(checksum != all_pm_data.usart_data[8])
+//		return 1;
+//	uint8_t pm25_lo = all_pm_data.usart_data[2];
+//	uint8_t pm25_hi = all_pm_data.usart_data[3];
+//	uint8_t pm10_lo = all_pm_data.usart_data[4];
+////	uint8_t pm10_hi = all_pm_data.usart_data[5];
+	uint16_t pm25_value = (sds_usart_data[1]<<8) | sds_usart_data[0];
+	uint16_t pm10_value = (sds_usart_data[3]<<8) | sds_usart_data[2];
+
 
 	all_pm_data.pm25_data.values[all_pm_data.current_ptr] = pm25_value;
 	all_pm_data.pm10_data.values[all_pm_data.current_ptr] = pm10_value;
+	calculate_avg(&(all_pm_data.pm25_data));
+	calculate_avg(&(all_pm_data.pm10_data));
 	all_pm_data.current_ptr++;
 	all_pm_data.current_ptr &= 0x7;
 	all_pm_data.total_cycles++;

@@ -57,14 +57,17 @@ typedef struct FineProtocol {
 } FineProtocol;
 
 FineProtocol _fineproto;
+uint8_t fp_last_byte;
+uint8_t fp_message_data_scratch[5];
 
 void fineproto_add_sensor(uint16_t (*get_data_for)(void), Sensor sensor);  // add sensor callback
 void fineproto_init(void);  // clean up the struct
 void fp_parse_all_messages(void);  // goes through all messages in the queue
+uint32_t fp_parse_last_message(void); // gets the last message in the queue
 void fp_parse_message(FineMessage);  // sends an appropriate message or sets internal values accordingly.
 void _fp_continuous_setup(void);  // sets up the timer for continous mode
 void _fp_continuous_advance(void);  // sends and advances iterator for cont mode; called back when the timer calls
-uint32_t _fp_got_message(void); // callback for DMA finished (received a message), checks the checksum and header
+uint32_t _fp_queue_message(void); // callback for DMA finished (received a message), checks the checksum and header
 FineMessage _fp_create_data_message(Sensor);  // tailors a message for given proto number
 
 inline uint8_t _fp_calculate_checksum(FineMessage msg)

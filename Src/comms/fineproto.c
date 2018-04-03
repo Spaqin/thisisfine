@@ -11,7 +11,7 @@ void fineproto_init()
   memset((char*) &_fineproto, 0, sizeof(FineProtocol));
   _fineproto.rdi = QUEUE_SIZE-1;
   //and start DMA
-  HAL_UART_Receive_DMA(&HM10_UART, (uint8_t*) &_fineproto.last_rcv, 5);
+  HAL_UART_Receive_IT(&HM10_UART, &fp_last_byte, 1);
 }
 
 void fp_parse_all_messages()
@@ -22,6 +22,19 @@ void fp_parse_all_messages()
     _fineproto.rdi++;
     _fineproto.rdi %= QUEUE_SIZE;
   }
+}
+
+
+/* *
+ * Parses one message from the queue and advances it.
+ * Returns true on empty queue.
+ * */
+uint32_t fp_parse_last_message()
+{
+    fp_parse_message(_fineproto.rcv_queue[_fineproto.rdi]);
+    _fineproto.rdi++;
+    _fineproto.rdi %= QUEUE_SIZE;
+    return _fineproto.rdi == _fineproto.rci;
 }
 
 void fp_parse_message(FineMessage message)
@@ -99,11 +112,8 @@ void _fp_continuous_advance()
 	hm10_send_message((uint8_t*)&_fineproto.continous_to_send, 5);
 }
 
-uint32_t _fp_got_message()
+uint32_t _fp_queue_message()
 {
-	FineMessage temp = _fineproto.last_rcv;
-	if(temp.header != 0xF2 || _fp_calculate_checksum(temp) != temp.checksum)
-		return 1;
 	_fineproto.rcv_queue[_fineproto.rci] = _fineproto.last_rcv;
 	_fineproto.rci++;
 	_fineproto.rci %= QUEUE_SIZE;

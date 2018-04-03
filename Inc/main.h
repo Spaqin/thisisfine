@@ -4,7 +4,7 @@
   * Description        : This file contains the common defines of the application
   ******************************************************************************
   *
-  * COPYRIGHT(c) 2017 STMicroelectronics
+  * COPYRIGHT(c) 2018 STMicroelectronics
   *
   * Redistribution and use in source and binary forms, with or without modification,
   * are permitted provided that the following conditions are met:
@@ -181,13 +181,22 @@
 #define I2C1_SCL_GPIO_Port GPIOB
 #define BT_STATUS_Pin GPIO_PIN_8
 #define BT_STATUS_GPIO_Port GPIOB
+#define DHT_IC_Pin GPIO_PIN_9
+#define DHT_IC_GPIO_Port GPIOB
 #define XL_CS_Pin GPIO_PIN_0
 #define XL_CS_GPIO_Port GPIOE
 #define XL_INT_Pin GPIO_PIN_1
 #define XL_INT_GPIO_Port GPIOE
 
 /* USER CODE BEGIN Private defines */
-
+#define _FL_SDS011_MSG_RCV 0x01
+#define _FL_DISP_NEXT 0x02
+#define _FL_BT_MSG_RCV 0x04
+#define _FL_BT_CONT 0x08
+#define _FL_BT_MSG_QUEUE 0x10
+#define _FL_DHT11_RCV 0x20
+#define IS_FLAG(x) (flags & x)
+#define CLEAR_FLAG(x) (flags &= !x)
 /* USER CODE END Private defines */
 
 /**

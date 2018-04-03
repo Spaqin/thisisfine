@@ -24,7 +24,7 @@
 							<option id="fr.ac6.managedbuild.option.gnu.cross.fpu.1253604559" name="Floating point hardware" superClass="fr.ac6.managedbuild.option.gnu.cross.fpu" value="fr.ac6.managedbuild.option.gnu.cross.fpu.fpv4-sp-d16" valueType="enumerated" />
 							<option id="fr.ac6.managedbuild.option.gnu.cross.floatabi.854004318" name="Floating-point ABI" superClass="fr.ac6.managedbuild.option.gnu.cross.floatabi" value="fr.ac6.managedbuild.option.gnu.cross.floatabi.hard" valueType="enumerated" />
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="fr.ac6.managedbuild.targetPlatform.gnu.cross.1215315490" isAbstract="false" osList="all" superClass="fr.ac6.managedbuild.targetPlatform.gnu.cross" />
-							<builder buildPath="${workspace_loc:/maybethistimemythesis}/Debug" id="fr.ac6.managedbuild.builder.gnu.cross.1945823655" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" superClass="fr.ac6.managedbuild.builder.gnu.cross">
+							<builder buildPath="${workspace_loc:/maybethistimemythesis}/Debug" id="fr.ac6.managedbuild.builder.gnu.cross.1945823655" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="fr.ac6.managedbuild.builder.gnu.cross">
 								<outputEntries>
 									<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="outputPath" name="Debug" />
 								</outputEntries>
@@ -39,6 +39,7 @@
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Device/ST/STM32L4xx/Include" />
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Include" />
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/maybethistimemythesis/Drivers/STM32L476G-Discovery}&quot;" />
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/finedevice/Drivers/STM32L476G-Discovery}&quot;" />
 								</option>
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.1231988322" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__weak=__attribute__((weak))" />
@@ -68,7 +69,7 @@
 							<tool id="fr.ac6.managedbuild.tool.gnu.archiver.1386554531" name="MCU GCC Archiver" superClass="fr.ac6.managedbuild.tool.gnu.archiver" />
 							<tool id="fr.ac6.managedbuild.tool.gnu.cross.assembler.1413807667" name="MCU GCC Assembler" superClass="fr.ac6.managedbuild.tool.gnu.cross.assembler">
 								<option id="gnu.both.asm.option.include.paths.405343156" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/maybethistimemythesis/Drivers/STM32L476G-Discovery}&quot;" />
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/finedevice/Drivers/STM32L476G-Discovery}&quot;" />
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.203150749" superClass="cdt.managedbuild.tool.gnu.assembler.input" />
 								<inputType id="fr.ac6.managedbuild.tool.gnu.cross.assembler.input.1785831569" superClass="fr.ac6.managedbuild.tool.gnu.cross.assembler.input" />
@@ -122,7 +123,7 @@
 									<listOptionValue builtIn="false" value="../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy" />
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Device/ST/STM32L4xx/Include" />
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Include" />
-									<listOptionValue builtIn="false" value="../Inc" />
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/finedevice/Drivers/STM32L476G-Discovery}&quot;" />
 								</option>
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.1231988322" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__weak=__attribute__((weak))" />
@@ -153,6 +154,7 @@
 							<tool id="fr.ac6.managedbuild.tool.gnu.cross.assembler.1413807667" name="MCU GCC Assembler" superClass="fr.ac6.managedbuild.tool.gnu.cross.assembler">
 								<option id="gnu.both.asm.option.include.paths.405343156" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="" />
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/finedevice/Drivers/STM32L476G-Discovery}&quot;" />
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.203150749" superClass="cdt.managedbuild.tool.gnu.assembler.input" />
 								<inputType id="fr.ac6.managedbuild.tool.gnu.cross.assembler.input.1785831569" superClass="fr.ac6.managedbuild.tool.gnu.cross.assembler.input" />
@@ -173,19 +175,22 @@
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
 		<project id="maybethistimemythesis.fr.ac6.managedbuild.target.gnu.cross.exe.977942572" name="Executable" projectType="fr.ac6.managedbuild.target.gnu.cross.exe" />
 	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders" />
+	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="Debug">
+			<resource resourceType="PROJECT" workspacePath="finedevice" />
+		</configuration>
+		<configuration configurationName="Release" />
+	</storageModule>
 	<storageModule moduleId="scannerConfiguration">
-		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="" />
+		<!--scannerConfigBuildInfo instanceId="fr.ac6.managedbuild.config.gnu.cross.exe.release.$(RELEASE_CONFIG_UID);fr.ac6.managedbuild.config.gnu.cross.exe.release.$(RELEASE_CONFIG_UID).;fr.ac6.managedbuild.tool.gnu.cross.c.compiler.$(RELEASE_TOOL_COMPILER_UID);cdt.managedbuild.tool.gnu.c.compiler.input.$(RELEASE_TOOL_COMPILER_INPUT_UID)">
+			<autodiscovery enabled="false" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo--><autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="" />
 		<scannerConfigBuildInfo instanceId="fr.ac6.managedbuild.config.gnu.cross.exe.debug.814682852;fr.ac6.managedbuild.config.gnu.cross.exe.debug.814682852.;fr.ac6.managedbuild.tool.gnu.cross.c.compiler.1587181090;fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.c.48097570">
 			<autodiscovery enabled="false" problemReportingEnabled="true" selectedProfileId="" />
 		</scannerConfigBuildInfo>
-		<!--scannerConfigBuildInfo instanceId="fr.ac6.managedbuild.config.gnu.cross.exe.release.$(RELEASE_CONFIG_UID);fr.ac6.managedbuild.config.gnu.cross.exe.release.$(RELEASE_CONFIG_UID).;fr.ac6.managedbuild.tool.gnu.cross.c.compiler.$(RELEASE_TOOL_COMPILER_UID);cdt.managedbuild.tool.gnu.c.compiler.input.$(RELEASE_TOOL_COMPILER_INPUT_UID)">
-			<autodiscovery enabled="false" problemReportingEnabled="true" selectedProfileId=""/>
-		</scannerConfigBuildInfo-->
-	</storageModule>
-	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders" />
-	<storageModule moduleId="refreshScope" versionNumber="2">
-		<configuration artifactName="${ProjName}" configurationName="Debug">
-			<resource resourceType="PROJECT" workspacePath="maybethistimemythesis" />
-		</configuration>
+		<scannerConfigBuildInfo instanceId="fr.ac6.managedbuild.config.gnu.cross.exe.release.357734587;fr.ac6.managedbuild.config.gnu.cross.exe.release.357734587.;fr.ac6.managedbuild.tool.gnu.cross.c.compiler.1587181090;fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.c.48097570">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="" />
+		</scannerConfigBuildInfo>
 	</storageModule>
 </cproject>
